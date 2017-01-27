@@ -2,7 +2,8 @@ Package: limestone
 Type: Package
 Title: Create HTML Forms
 Version: 0.1.0
-Author@R: person(given = 'Nathan', family = 'Teetor', email = 'nathanteetor@gmail.com', role = c('aut', 'cre'))
+Author@R: person(given = 'Nathan', family = 'Teetor', email =
+    'nathanteetor@gmail.com', role = c('aut', 'cre'))
 Maintainer: Nathan Teetor <nathanteetor@gmail.com>
 Description: More about what it does (maybe more than one line)
     Use four spaces when indenting paragraphs within the Description.
@@ -11,3 +12,4 @@ Encoding: UTF-8
 LazyData: true
 Imports:
     R6
+RoxygenNote: 5.0.1
