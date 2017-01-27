@@ -18,3 +18,12 @@ form <- function(action, method = 'get', ...) {
     class = 'form'
   )
 }
+
+.__form__ <- R6::R6Class(
+  class = FALSE,
+  public = list(
+    initialize = function() {
+      invisible(self)
+    }
+  )
+)

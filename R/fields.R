@@ -9,7 +9,9 @@ field <- function(name, validate) {
 .__field__ <- R6::R6Class(
   'field',
   public = list(
-    initialize = function() {
+    `__widget` = NULL,
+    initialize = function(widget = NULL) {
+      self[['__widget']] <- widget %||% text_input
       invisible(self)
     },
     validate = function() {
@@ -17,4 +19,3 @@ field <- function(name, validate) {
     }
   )
 )
-

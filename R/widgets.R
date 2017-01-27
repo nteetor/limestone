@@ -10,6 +10,12 @@ widget <- function(attrs = NULL) {
   .__widget__$new(attrs)
 }
 
+#' @rdname widget
+#' @export
+is.widget <- function(x) {
+  is.environment(x) && 'widget' %in% x[['__class']]
+}
+
 .__widget__ <- R6::R6Class(
   class = FALSE,
   cloneable = FALSE,
