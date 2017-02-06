@@ -28,7 +28,7 @@ is.widget <- function(x) {
       invisible(self)
     },
     render = function() {
-      stop_not_implemented()
+      stop(not_implemented())
     }
   )
 )

@@ -7,8 +7,12 @@ NULL
 
 #' @rdname inputs
 #' @export
-text_input <- function() {
-  .__text_input__$new()
+text_input <- function(...) {
+  args <- list(...)
+  if (!is_named(args)) {
+    stop('!!!')
+  }
+  .__text_input__$new(attrs = args)
 }
 
 #' @rdname inputs
@@ -70,14 +74,40 @@ hidden_input <- function() {
   public = list(
     `__type` = NULL,
     initialize = function(attrs = NULL) {
-      super$initialize(attrs)
+      attrs <- attrs %||% list()
+      attrs <- list(
+        type = attribute(
+          'type',
+          attrs[['type']],
+          'text',
+          function(v) !is.null(v)
+        ),
+        autocapitalize = attribute(
+          'autocapitalize',
+          attrs[['autocapitalize']],
+          'none',
+          function(v) v %in% c('none', 'sentences', 'words', 'characters')
+        ),
+        autocomplete = attribute(
+          'autocomplete',
+          attrs[['autocomplete']],
+          'off',
+          function(v) v %in% autocomplete_values
+        ),
+        autocorrect = attribute(
+          'autocorrect',
+          attrs[['autocorrect']],
+          'off',
+          function(v) v %in% c('on', 'off')
+        )
+      )
+
+      # if type=file, then attr accept
       self[['__class']] <- c('input', self[['__class']])
       invisible(self)
     },
-    render = function(attrs = NULL) {
-      attrs <- c(self[['__attributes']], attrs)
-      attrs[['type']] <- self[['__type']]
-      format_input(attrs)
+    render = function() {
+
     }
   ),
   active = list(

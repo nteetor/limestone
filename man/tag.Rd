@@ -10,4 +10,3 @@ tag(element, attributes)
 Internal helper function.
 }
 \keyword{internal}
-

@@ -4,10 +4,9 @@
 \alias{field}
 \title{Create a Form Field}
 \usage{
-field(name, validate)
+field()
 }
 \description{
 Create a Form Field
 }
 \keyword{internal}
-

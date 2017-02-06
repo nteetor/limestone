@@ -4,17 +4,8 @@
 \alias{form}
 \title{Create an HTML Form}
 \usage{
-form(action, method = "get", ...)
-}
-\arguments{
-\item{action}{Where to forward the form information.}
-
-\item{method}{One of \code{'get'} or \code{'post'}.}
-
-\item{\ldots}{widget or input objects, see \code{\link{inputs}} and
-\code{\link{widgets}}.}
+form(...)
 }
 \description{
 An HTML form.
 }
-
