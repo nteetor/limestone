@@ -10,8 +10,9 @@ NULL
 text_input <- function(...) {
   args <- list(...)
   if (!is_named(args)) {
-    stop('!!!')
+    stop('expecting named arguments', call. = FALSE)
   }
+  args[['type']] <- 'text'
   .__text_input__$new(attrs = args)
 }
 
@@ -75,38 +76,21 @@ hidden_input <- function() {
     `__type` = NULL,
     initialize = function(attrs = NULL) {
       attrs <- attrs %||% list()
-      attrs <- list(
-        type = attribute(
-          'type',
-          attrs[['type']],
-          'text',
-          function(v) !is.null(v)
-        ),
-        autocapitalize = attribute(
-          'autocapitalize',
-          attrs[['autocapitalize']],
-          'none',
-          function(v) v %in% c('none', 'sentences', 'words', 'characters')
-        ),
-        autocomplete = attribute(
-          'autocomplete',
-          attrs[['autocomplete']],
-          'off',
-          function(v) v %in% autocomplete_values
-        ),
-        autocorrect = attribute(
-          'autocorrect',
-          attrs[['autocorrect']],
-          'off',
-          function(v) v %in% c('on', 'off')
-        )
-      )
-
-      # if type=file, then attr accept
+      super$initialize(attrs = attrs)
+      self[['__type']] <- attrs[['type']]
       self[['__class']] <- c('input', self[['__class']])
       invisible(self)
     },
     render = function() {
+      paste0(
+        '<input ',
+        paste0(
+          names(self[['__attributes']]), '=', self[['__attributes']],
+          collapse = ' '
+        ),
+        '/>',
+        ''
+      )
 
     }
   ),

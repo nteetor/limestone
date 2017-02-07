@@ -5,99 +5,36 @@
 #' @export
 form <- function(...) {
   args <- list(...)
-  attrs <- Filter(is.character, args)
-  if (!is_named(attrs)) {
-    unknown <- attrs[which(names3(attrs) == '')[1]]
-    stop(invalid_argument('form', unknown))
-  }
+  attrs <- args[which(names3(args) != '')]
+  fields <- args[which(names3(args) == '')]
   .__form__$new(attrs = attrs)
-}
-
-fields <- function(x) {
-  if (!is.form(x)) {
-    stop('expecting form object', call. = FALSE)
-  }
-  x[['__fields']]
 }
 
 is.form <- function(x) {
   is.environment(x) && 'form' %in% x[['__class']]
 }
 
-`[.form` <- function(x, name) {
-  x[['__fields']][[name]]
-}
-
 .__form__ <- R6::R6Class(
-  classname = 'form',
+  class = FALSE,
   public = list(
     `__attributes` = NULL,
     `__fields` = NULL,
     `__class` = NULL,
-    initialize = function(attrs = NULL) {
+    initialize = function(attrs = NULL, fields = NULL) {
       self[['__class']] <- 'form'
-      self[['__fields']] <- list()
-
-      attrs <- attrs %||% list()
-      self[['__attributes']] <- list(
-        `accept-charset` = attribute(
-          'accept-charset',
-          attrs[['accept-charset']],
-          'UNKNOWN'
-        ),
-        action = attribute(
-          'action',
-          attrs[['action']],
-          NULL,
-          function(v) !is.null(v)
-        ),
-        autocomplete = attribute(
-          'autocomplete',
-          attrs[['autocomplete']],
-          'on',
-          function(v) v == 'on' || v == 'off'
-        ),
-        enctype = attribute(
-          'enctype',
-          attrs[['enctype']],
-          'application/x-www-form-urlencoded',
-          function(v) v %in% c('application/x-www-form-urlencoded',
-                               'multipart/form-data', 'text/plain')
-        ),
-        method = attribute(
-          'method',
-          attrs[['method']],
-          'get',
-          function(v) v == 'get' || v == 'post'
-        ),
-        name = attribute(
-          'name',
-          attrs[['name']],
-          NULL,
-          function(v) !is.null(v)
-        ),
-        novalidate = attribute(
-          'novalidate',
-          attrs[['novalidate']],
-          'false',
-          function(v) v == 'false' || v == 'true'
-        ),
-        target = attribute(
-          'target',
-          attrs[['target']],
-          '_self',
-          function(v) is.character(v)
-        )
-      )
+      self[['__fields']] <- fields %||% list()
+      self[['__attributes']] <- attrs %||% list()
 
       invisible(self)
     },
     render = function() {
       self$validate()
+
       paste0(
         '<form ',
         paste0(
-          lapply(self$attributes, function(a) a$render()),
+          names(self[['__attributes']]), '=',
+          paste0('"', self[['__attributes']], '"'),
           collapse = ' '
         ),
         '>',
@@ -106,21 +43,14 @@ is.form <- function(x) {
       )
     },
     validate = function() {
-      for (att in self[['__attributes']]) {
-        tryCatch(
-          att$validate(),
-          invalid_attribute = function(e) {
-            stop(invalid_attribute('form', attr(e, 'name'), attr(e, 'value')))
-          }
-        )
-      }
+      tryCatch(
+        self[['__attributes']] <- lapply(self[['__attributes']], as.character),
+        error = function(e) {
+          stop('could not convert attributes to character', call. = FALSE)
+        }
+      )
 
       invisible(self)
-    }
-  ),
-  active = list(
-    attributes = function() {
-      Filter(function(a) !a$is_default(), self[['__attributes']])
     }
   )
 )
